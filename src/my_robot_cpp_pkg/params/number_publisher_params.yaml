@@ -1,0 +1,19 @@
+NumberPublisherNode:
+  ros__parameters:
+    number: 36
+    qos_overrides:
+      /clock:
+        subscription:
+          depth: 3
+          durability: volatile
+          history: keep_last
+          reliability: best_effort
+      /parameter_events:
+        publisher:
+          depth: 6000
+          durability: volatile
+          history: keep_last
+          reliability: reliable
+    timer_period: 1.2
+    use_sim_time: true
+

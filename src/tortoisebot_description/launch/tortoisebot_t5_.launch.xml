@@ -1,0 +1,34 @@
+<launch>
+    <!-- <let name="turtle_urdf_path" value="$(find-pkg-share tortoisebot_description)/urdf/tortoisebot_deploy.urdf.xacro" /> -->
+    <let name="turtle_urdf_path" value="$(find-pkg-share tortoisebot_description)/urdf/tortoisebot_depth_cam_lidar.xacro" />
+
+    <!--    <let mane="urdf_path"#creating a variable called "urdf_path" value="$(find-pkg-share my_robot_desciption)/urdf/my_robot.urdf" #value="$(find-pkg-share <package_name>)/<urdf_folder_name>/<urdf_file_name.urdf" />
+-->
+    <let name="rviz_path" value="$(find-pkg-share tortoisebot_description)/rviz_config_files/task_5.rviz" />
+
+
+    <node pkg="robot_state_publisher" exec="robot_state_publisher">
+        <param name="robot_description" value="$(command 'xacro $(var turtle_urdf_path)')"/> <!-- command to run a xacro file!! -->
+    </node>
+
+    <include file="$(find-pkg-share gazebo_ros)/launch/gazebo.launch.py">
+    <!-- including custom world in gazebo sim -->
+    <arg name="world" value="$(find-pkg-share tortoisebot_gazebo)/worlds/task_5.world"/>
+    </include>
+
+    <!-- <node pkg="joint_state_publisher" exec="joint_state_publisher"/> -->
+    
+    <node pkg="gazebo_ros" exec="spawn_entity.py"
+          args="-topic robot_description -entity tortoisebot"/>    
+    
+    <node pkg="depth_image_proc" exec="point_cloud_xyz_node" >
+        <remap from="image_rect" to="/depth/depth_camera/image_raw" />
+        <remap from="camera_info" to="/depth/depth_camera/camera_info" /> 
+    </node>
+
+    <node pkg="my_robot_py_pkg" exec="tas_five_one"/>
+    <node pkg="my_robot_py_pkg" exec="tas_five_two"/>
+
+    <node pkg="rviz2" exec="rviz2" output="screen" args="-d $(var rviz_path)" />
+
+</launch>

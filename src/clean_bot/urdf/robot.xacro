@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    
+    <!--   variables   -->
+
+    <xacro:property name="base_radius" value="0.225" />
+    <xacro:property name="base_height" value="0.12" />
+    <xacro:property name="wheel_radius" value="0.03" />
+    <xacro:property name="wheel_length" value="0.03" />
+    <xacro:property name="castor_wheel_radius" value="0.03" />
+
+    
+
+
+    <!-- Base -->
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <cylinder radius="${base_radius}" length="${base_height}"/>
+            </geometry>
+            <origin xyz="0 0 ${base_height / 2.0}"/>
+            <material name="green"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="${base_radius}" length="${base_height}"/>
+            </geometry>
+            <origin xyz="0 0 ${base_height / 2.0}"/>
+        </collision>
+        <!--   increasing inertia by multiplying the dimensions by 2   -->
+            <xacro:wheel_inertia m="6.0" r="${2*base_radius}" l="${2*base_height}" 
+                                 xyz="0 0 0" rpy="0 0 0"/>
+    </link>
+
+
+    <xacro:macro name="wheel_link" params="prefix">
+        <link name="${prefix}_wheel_link">
+            <visual>
+                <geometry>
+                    <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+                </geometry>
+            <!-- Rotate cylinder so it looks like a wheel -->
+                <origin xyz="0 0 0" rpy="${pi / 2.0} 0 0"/>
+                <material name="gray"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="${pi / 2.0} 0 0"/>
+            </collision>
+            <xacro:wheel_inertia m="0.5" r="${2*wheel_radius}" l="${2*wheel_length}" 
+                                 xyz="0 0 0" rpy="${pi / 2.0} 0 0"/>
+        </link>
+    </xacro:macro>
+
+
+    <xacro:wheel_link prefix="right" />
+    <xacro:wheel_link prefix="left" />
+
+
+    <xacro:macro name="caster_link" params="prefix">
+        <link name="${prefix}_caster_link">
+            <visual>
+                <geometry>
+                    <sphere radius="${castor_wheel_radius}"/>
+                </geometry>
+            <!-- Rotate cylinder so it looks like a wheel -->
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <material name="gray"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <sphere radius="${castor_wheel_radius}"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+            </collision>
+        <xacro:castor_inertia m="0.5" r="${2*castor_wheel_radius}" 
+                              xyz="0 0 0" rpy="0 0 0"/>
+        </link>
+    </xacro:macro>
+
+    <xacro:caster_link prefix="front" />
+    <xacro:caster_link prefix="rear" />
+
+
+    <!-- Caster wheel -->
+    <!-- <link name="caster_wheel_link">
+        <visual>
+            <geometry>
+                <sphere radius="${castor_wheel_radius}"/>
+            </geometry>
+            <origin xyz="0 0 0"/>
+            <material name="gray"/>
+        </visual>
+        <collision>
+            <geometry>
+                <sphere radius="${castor_wheel_radius}"/>
+            </geometry>
+            <origin xyz="0 0 0"/>
+        </collision>
+        <xacro:castor_inertia m="0.5" r="${2*castor_wheel_radius}" 
+                              xyz="0 0 0" rpy="0 0 0"/>
+    </link> -->
+
+    <!-- Base footpriNt -->
+
+
+    <link name="base_footprint">
+    </link>
+
+    <!-- Joints -->
+    <joint name="base_right_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="right_wheel_link"/>
+        <origin xyz="0 -0.18 0"/>   
+        <axis xyz="0 1 0"/>
+         <dynamics damping="0.2" friction="1.0"/>
+    </joint>
+
+    <joint name="base_left_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="left_wheel_link"/>
+        <origin xyz="0 0.18 0"/>  
+        <axis xyz="0 1 0"/>
+         <dynamics damping="0.2" friction="1.0"/>
+    </joint>
+
+    <joint name="front_base_caster_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="front_caster_link"/>
+        <origin xyz="0.18 0 0"/>
+         <dynamics damping="0.2" friction="1.0"/>
+    </joint>
+
+    <joint name="rear_base_caster_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="rear_caster_link"/>
+        <origin xyz="-0.18 0 0"/>
+         <dynamics damping="0.2" friction="1.0"/>
+    </joint>
+
+        <joint name="base_footprint_joint" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
+        <origin xyz="0 0 ${wheel_radius}"/>
+    </joint>
+
+</robot>
+

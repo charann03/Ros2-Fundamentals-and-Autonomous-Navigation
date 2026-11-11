@@ -1,0 +1,1002 @@
+#note for the new NAV2_HUMBLE we have to always make "enable_stamped_cmd_vel: false"
+#ie
+#controller_server:
+ # ros__parameters:
+  #  enable_stamped_cmd_vel: false
+
+#velocity_smoother:
+ # ros__parameters:
+  #  enable_stamped_cmd_vel: false
+
+#behavior_server:
+ # ros__parameters:
+ #   enable_stamped_cmd_vel: false
+
+#collision_monitor:
+#  ros__parameters:
+#    enable_stamped_cmd_vel: false
+
+#docking_server:
+#  ros__parameters:
+#    enable_stamped_cmd_vel: false
+
+amcl:
+  ros__parameters:
+    alpha1: 0.2
+    alpha2: 0.2
+    alpha3: 0.2
+    alpha4: 0.2
+    alpha5: 0.2
+    base_frame_id: "base_footprint"
+    beam_skip_distance: 0.5
+    beam_skip_error_threshold: 0.9
+    beam_skip_threshold: 0.3
+    do_beamskip: false
+    global_frame_id: "map"
+    lambda_short: 0.1
+    laser_likelihood_max_dist: 2.0
+    laser_max_range: 100.0
+    laser_min_range: -1.0
+    laser_model_type: "likelihood_field"
+    max_beams: 60
+    max_particles: 2000
+    min_particles: 500
+    odom_frame_id: "odom"
+    pf_err: 0.05
+    pf_z: 0.99
+    recovery_alpha_fast: 0.0
+    recovery_alpha_slow: 0.0
+    resample_interval: 1
+    robot_model_type: "nav2_amcl::DifferentialMotionModel"
+    save_pose_rate: 0.5
+    sigma_hit: 0.2
+    tf_broadcast: true
+    transform_tolerance: 1.0
+    service_introspection_mode: "disabled"
+    update_min_a: 0.2
+    update_min_d: 0.25
+    z_hit: 0.5
+    z_max: 0.05
+    z_rand: 0.5
+    z_short: 0.05
+    scan_topic: scan
+    
+    
+bt_navigator:
+  ros__parameters:
+    global_frame: map
+    robot_base_frame: base_link
+    transform_tolerance: 0.1
+    filter_duration: 0.3
+    default_server_timeout: 20
+    default_cancel_timeout: 50
+    introspection_mode: "disabled"
+    odom_topic: odometry/filtered
+    # default_nav_to_pose_bt_xml: $(find-pkg-share my_package)/behavior_tree/my_nav_to_pose_bt.xml
+    # default_nav_through_poses_bt_xml: $(find-pkg-share my_package)/behavior_tree/my_nav_through_poses_bt.xml
+    always_reload_bt_xml: false
+    bt_log_idle_transitions: true
+    goal_blackboard_id: goal
+    goals_blackboard_id: goals
+    path_blackboard_id: path
+    waypoint_statuses_blackboard_id: waypoint_statuses
+    navigators: ['navigate_to_pose', 'navigate_through_poses']
+    bt_search_directories:
+      - $(find-pkg-share nav2_bt_navigator)/behavior_trees
+    navigate_to_pose:
+      plugin: "nav2_bt_navigator::NavigateToPoseNavigator" # In Iron and older versions, "/" was used instead of "::"
+      enable_groot_monitoring: false
+      groot_server_port: 1667
+      search_window: 2.0
+    navigate_through_poses:
+      plugin: "nav2_bt_navigator::NavigateThroughPosesNavigator" # In Iron and older versions, "/" was used instead of "::"
+      enable_groot_monitoring: false
+      groot_server_port: 1669
+      search_window: 2.0
+    # plugin_lib_names:
+    #   - nav2_compute_path_to_pose_action_bt_node
+    #   - nav2_follow_path_action_bt_node
+    #   - nav2_back_up_action_bt_node
+    #   - nav2_spin_action_bt_node
+    #   - nav2_wait_action_bt_node
+    #   - nav2_clear_costmap_service_bt_node
+    #   - nav2_is_stuck_condition_bt_node
+    #   - nav2_is_stopped_condition_bt_node
+    #   - nav2_goal_reached_condition_bt_node
+    #   - nav2_initial_pose_received_condition_bt_node
+    #   - nav2_goal_updated_condition_bt_node
+    #   - nav2_reinitialize_global_localization_service_bt_node
+    #   - nav2_rate_controller_bt_node
+    #   - nav2_distance_controller_bt_node
+    #   - nav2_speed_controller_bt_node
+    #   - nav2_recovery_node_bt_node
+    #   - nav2_pipeline_sequence_bt_node
+    #   - nav2_persistent_sequence_bt_node
+    #   - nav2_pause_resume_controller_bt_node
+    #   - nav2_round_robin_node_bt_node
+    #   - nav2_transform_available_condition_bt_node
+    #   - nav2_time_expired_condition_bt_node
+    #   - nav2_distance_traveled_condition_bt_node
+    #   - nav2_single_trigger_bt_node
+    error_code_name_prefixes:
+      - assisted_teleop
+      - backup
+      - compute_path
+      - dock_robot
+      - drive_on_heading
+      - follow_path
+      - nav_thru_poses
+      - nav_to_pose
+      - spin
+      - route
+      - undock_robot
+      - wait
+
+bt_navigator_navigate_through_poses_rclcpp_node:
+  ros__parameters:
+    use_sim_time: True
+
+bt_navigator_navigate_to_pose_rclcpp_node:
+  ros__parameters:
+    use_sim_time: True
+
+# bt_navigator:
+#   ros__parameters:
+#     use_sim_time: True
+#     global_frame: map
+#     robot_base_frame: base_link
+#     odom_topic: /odom
+#     # enable_groot_monitoring: True
+#     # groot_zmq_publisher_port: 1666
+#     # groot_zmq_server_port: 1667
+#     default_bt_xml_filename: "/home/charann-inc5751/clean_bot_bt.xml"
+#     plugin_lib_names:
+#       - nav2_compute_path_to_pose_action_bt_node
+#       - nav2_follow_path_action_bt_node
+#       - nav2_pipeline_sequence_bt_node
+#       - nav2_goal_reached_condition_bt_node
+#       - nav2_is_path_valid_condition_bt_node
+
+# bt_navigator_rclcpp_node:
+#   ros__parameters:
+#     use_sim_time: True
+
+
+# controller_server:
+#   ros__parameters:
+#     use_sim_time: True
+#     controller_frequency: 20.0
+#     min_x_velocity_threshold: 0.001
+#     min_y_velocity_threshold: 0.5
+#     min_theta_velocity_threshold: 0.001
+#     failure_tolerance: 0.3
+#     progress_checker_plugin: "progress_checker"
+#     goal_checker_plugins: ["general_goal_checker"] # "precise_goal_checker"
+#     controller_plugins: ["FollowPath"]
+
+#     # Progress checker parameters
+#     progress_checker:
+#       plugin: "nav2_controller::SimpleProgressChecker"
+#       required_movement_radius: 0.5
+#       movement_time_allowance: 10.0
+#     # Goal checker parameters
+#     #precise_goal_checker:
+#     #  plugin: "nav2_controller::SimpleGoalChecker"
+#     #  xy_goal_tolerance: 0.25
+#     #  yaw_goal_tolerance: 0.25
+#     #  stateful: True
+#     general_goal_checker:
+#       stateful: True
+#       plugin: "nav2_controller::SimpleGoalChecker"
+#       xy_goal_tolerance: 0.25
+#       yaw_goal_tolerance: 0.25
+#     # DWB parameters
+#     FollowPath:
+#       plugin: "dwb_core::DWBLocalPlanner"
+#       debug_trajectory_details: True
+#       min_vel_x: 0.0
+#       min_vel_y: 0.0
+#       max_vel_x: 0.26
+#       max_vel_y: 0.0
+#       max_vel_theta: 1.0
+#       min_speed_xy: 0.0
+#       max_speed_xy: 0.26
+#       min_speed_theta: 0.0
+#       # Add high threshold velocity for turtlebot 3 issue.
+#       # https://github.com/ROBOTIS-GIT/turtlebot3_simulations/issues/75
+#       acc_lim_x: 2.5
+#       acc_lim_y: 0.0
+#       acc_lim_theta: 3.2
+#       decel_lim_x: -2.5
+#       decel_lim_y: 0.0
+#       decel_lim_theta: -3.2
+#       vx_samples: 20
+#       vy_samples: 5
+#       vtheta_samples: 20
+#       sim_time: 1.7
+#       linear_granularity: 0.05
+#       angular_granularity: 0.025
+#       transform_tolerance: 0.2
+#       xy_goal_tolerance: 0.25
+#       trans_stopped_velocity: 0.25
+#       short_circuit_trajectory_evaluation: True
+#       stateful: True
+#       critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
+#       BaseObstacle.scale: 0.02
+#       PathAlign.scale: 32.0
+#       PathAlign.forward_point_distance: 0.1
+#       GoalAlign.scale: 24.0
+#       GoalAlign.forward_point_distance: 0.1
+#       PathDist.scale: 32.0
+#       GoalDist.scale: 24.0
+#       RotateToGoal.scale: 32.0
+#       RotateToGoal.slowing_factor: 5.0
+#       RotateToGoal.lookahead_time: -1.0
+
+#FOR rolling humble version
+controller_server:
+  ros__parameters:
+    controller_frequency: 20.0
+    min_x_velocity_threshold: 0.001
+    min_y_velocity_threshold: 0.5
+    enable_stamped_cmd_vel: false
+    min_theta_velocity_threshold: 0.001
+    progress_checker_plugins: ["progress_checker"] # progress_checker_plugin: "progress_checker" For Humble and older
+    goal_checker_plugins: ["goal_checker"]
+    controller_plugins: ["FollowPath"]
+    odom_topic: odometry/filtered
+
+    progress_checker:
+      plugin: "nav2_controller::SimpleProgressChecker"
+      required_movement_radius: 0.5
+      movement_time_allowance: 10.0
+    goal_checker:
+      plugin: "nav2_controller::SimpleGoalChecker"
+      xy_goal_tolerance: 0.25
+      yaw_goal_tolerance: 0.25
+      stateful: True
+    FollowPath:
+      plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
+      max_linear_vel: 0.5
+      min_linear_vel: -0.5
+      max_angular_vel: 2.5
+      min_angular_vel: -2.5
+      max_linear_accel: 2.5
+      max_linear_decel: -2.5
+      max_angular_accel: 3.2
+      max_angular_decel: -3.2
+      lookahead_dist: 0.6
+      min_lookahead_dist: 0.3
+      max_lookahead_dist: 0.9
+      lookahead_time: 1.5
+      rotate_to_heading_angular_vel: 1.8
+      use_velocity_scaled_lookahead_dist: false
+      min_approach_linear_velocity: 0.05
+      approach_velocity_scaling_dist: 0.6
+      use_collision_detection: true
+      max_allowed_time_to_collision_up_to_carrot: 1.0
+      use_regulated_linear_velocity_scaling: true
+      use_fixed_curvature_lookahead: false
+      curvature_lookahead_dist: 0.25
+      use_cost_regulated_linear_velocity_scaling: false
+      cost_scaling_dist: 0.3
+      cost_scaling_gain: 1.0
+      regulated_linear_scaling_min_radius: 0.9
+      regulated_linear_scaling_min_speed: 0.25
+      use_rotate_to_heading: true
+      allow_reversing: false
+      rotate_to_heading_min_angle: 0.785
+      min_distance_to_obstacle: 0.0
+      use_dynamic_window: false
+      allow_obstacle_checking_beyond_goal: false
+      
+      
+      
+
+# local_costmap:
+#   local_costmap:
+#     ros__parameters:
+#       update_frequency: 5.0
+#       publish_frequency: 2.0
+#       global_frame: odom
+#       robot_base_frame: base_link
+#       use_sim_time: True
+#       rolling_window: true
+#       width: 3
+#       height: 3
+#       resolution: 0.05
+#       robot_radius: 0.225
+#       plugins: ["voxel_layer", "inflation_layer"]
+#       inflation_layer:
+#         plugin: "nav2_costmap_2d::InflationLayer"
+#         cost_scaling_factor: 3.0
+#         inflation_radius: 0.25
+#       voxel_layer:
+#         plugin: "nav2_costmap_2d::VoxelLayer"
+#         enabled: True
+#         publish_voxel_map: True
+#         origin_z: 0.0
+#         z_resolution: 0.05
+#         z_voxels: 16
+#         max_obstacle_height: 2.0
+#         mark_threshold: 0
+#         observation_sources: scan
+#         scan:
+#           topic: scan
+#           max_obstacle_height: 2.0
+#           clearing: True
+#           marking: True
+#           data_type: "LaserScan"
+#           raytrace_max_range: 3.0
+#           raytrace_min_range: 0.0
+#           obstacle_max_range: 2.5
+#           obstacle_min_range: 0.0
+#       static_layer:
+#         plugin: "nav2_costmap_2d::StaticLayer"
+#         map_subscribe_transient_local: True
+#       always_send_full_costmap: True
+
+# global_costmap:
+#   global_costmap:
+#     ros__parameters:
+#       update_frequency: 1.0
+#       publish_frequency: 1.0
+#       global_frame: map
+#       robot_base_frame: base_link
+#       use_sim_time: True
+#       robot_radius: 0.225
+#       resolution: 0.05
+#       track_unknown_space: true
+#       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+#       obstacle_layer:
+#         plugin: "nav2_costmap_2d::ObstacleLayer"
+#         enabled: True
+#         observation_sources: scan
+#         scan:
+#           topic: scan
+#           max_obstacle_height: 2.0
+#           clearing: True
+#           marking: True
+#           data_type: "LaserScan"
+#           raytrace_max_range: 3.0
+#           raytrace_min_range: 0.0
+#           obstacle_max_range: 2.5
+#           obstacle_min_range: 0.0
+#       static_layer:
+#         plugin: "nav2_costmap_2d::StaticLayer"
+#         map_subscribe_transient_local: True
+#       inflation_layer:
+#         plugin: "nav2_costmap_2d::InflationLayer"
+#         cost_scaling_factor: 3.0
+#         inflation_radius: 0.25
+#       always_send_full_costmap: True
+
+
+
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      update_frequency: 5.0
+      publish_frequency: 5.0
+      global_frame: odom
+      robot_base_frame: base_link
+      rolling_window: true
+      width: 5
+      height: 5
+      resolution: 0.05
+      robot_radius: 0.35  # Based on half of the robot's width (300mm / 2 = 150mm)
+      plugins: ["obstacle_layer", "voxel_layer", "denoise_layer", "inflation_layer"]
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        enabled: True
+        observation_sources: scan
+        scan:
+          topic: /scan
+          raytrace_min_range: 0.20
+          obstacle_min_range: 0.20
+          max_obstacle_height: 2.0
+          clearing: True
+          marking: True
+          data_type: "LaserScan"
+      voxel_layer:
+        plugin: "nav2_costmap_2d::VoxelLayer"
+        enabled: False
+        publish_voxel_map: False
+        origin_z: 0.0
+        z_resolution: 0.2
+        z_voxels: 10
+        min_obstacle_height: 0.0
+        max_obstacle_height: 2.0
+        mark_threshold: 0
+        observation_sources: realsense1
+        realsense1:
+          topic: /camera/points
+          raytrace_min_range: 0.05
+          raytrace_max_range: 1.25
+          obstacle_min_range: 0.05
+          obstacle_max_range: 1.25
+          min_obstacle_height: 0.0
+          max_obstacle_height: 2.0
+          clearing: False
+          marking: True
+          data_type: "PointCloud2"
+      denoise_layer:
+        plugin: "nav2_costmap_2d::DenoiseLayer"
+        enabled: true
+        minimal_group_size: 2
+        group_connectivity_type: 8
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        cost_scaling_factor: 2.58
+        inflation_radius: 1.75
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        map_subscribe_transient_local: True
+      always_send_full_costmap: True
+
+
+
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      update_frequency: 5.0
+      publish_frequency: 5.0
+      global_frame: map
+      robot_base_frame: base_link
+      robot_radius: 0.35  # Robot width is 300mm
+      resolution: 0.05
+      track_unknown_space: true
+      plugins: ["static_layer", "obstacle_layer", "voxel_layer", "inflation_layer"]
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        map_subscribe_transient_local: True
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        enabled: True
+        observation_sources: scan
+        scan:
+          topic: /scan
+          raytrace_min_range: 0.20
+          obstacle_min_range: 0.20
+          max_obstacle_height: 2.0
+          clearing: True
+          marking: True
+          data_type: "LaserScan"
+      voxel_layer:
+        plugin: "nav2_costmap_2d::VoxelLayer"
+        enabled: False
+        publish_voxel_map: False
+        origin_z: 0.0
+        z_resolution: 0.2
+        z_voxels: 10
+        min_obstacle_height: 0.0
+        max_obstacle_height: 2.0
+        mark_threshold: 0
+        observation_sources: realsense1
+        realsense1:
+          topic: /camera/points
+          raytrace_min_range: 0.05
+          raytrace_max_range: 1.25
+          obstacle_min_range: 0.05
+          obstacle_max_range: 1.25
+          min_obstacle_height: 0.0
+          max_obstacle_height: 2.0
+          clearing: False
+          marking: True
+          data_type: "PointCloud2"
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        cost_scaling_factor: 2.58
+        inflation_radius: 1.75
+      always_send_full_costmap: True
+
+
+
+
+map_server:
+  ros__parameters:
+    use_sim_time: True
+    # Overridden in launch by the "map" launch configuration or provided default value.
+    # To use in yaml, remove the default "map" value in the tb3_simulation_launch.py file & provide full path to map below.
+    yaml_filename: ""
+
+map_saver:
+  ros__parameters:
+    use_sim_time: True
+    save_map_timeout: 5.0
+    free_thresh_default: 0.25
+    occupied_thresh_default: 0.65
+    map_subscribe_transient_local: True
+
+planner_server:
+  ros__parameters:
+    expected_planner_frequency: 20.0
+    use_sim_time: True
+    planner_plugins: ["GridBased"]
+    GridBased:
+      plugin: "nav2_navfn_planner::NavfnPlanner"
+      tolerance: 0.5
+      use_astar: true       #true for mapless navigation
+      allow_unknown: true
+
+# smoother_server:
+#   ros__parameters:
+#     use_sim_time: True
+#     smoother_plugins: ["simple_smoother"]
+#     simple_smoother:
+#       plugin: "nav2_smoother::SimpleSmoother"
+#       tolerance: 1.0e-10
+#       max_its: 1000
+#       do_refinement: True
+
+smoother_server:
+  ros__parameters:
+    use_sim_time: True
+    costmap_topic: global_costmap/costmap_raw
+    footprint_topic: global_costmap/published_footprint
+    robot_base_frame: base_link
+    transform_tolerance: 1.0
+    smoother_plugins: ["savitzky_golay_smoother"]
+    savitzky_golay_smoother:
+      plugin: "nav2_smoother::SavitzkyGolaySmoother"
+      window_size: 10
+      poly_order: 3
+      do_refinement: True
+      refinement_num: 6
+      enforce_path_inversion: False
+
+behavior_server:
+  ros__parameters:
+    costmap_topic: local_costmap/costmap_raw
+    footprint_topic: local_costmap/published_footprint
+    enable_stamped_cmd_vel: false
+    cycle_frequency: 10.0
+    behavior_plugins: ["spin", "backup", "drive_on_heading", "assisted_teleop", "wait"]
+    spin:
+      plugin: "nav2_behaviors::Spin"
+    backup:
+      plugin: "nav2_behaviors::BackUp"
+    drive_on_heading:
+      plugin: "nav2_behaviors::DriveOnHeading"
+    wait:
+      plugin: "nav2_behaviors::Wait"
+    assisted_teleop:
+      plugin: "nav2_behaviors::AssistedTeleop"
+    global_frame: odom
+    robot_base_frame: base_link
+    transform_tolerance: 1.0   # 0.1 to 1.0
+    use_sim_time: true
+    simulate_ahead_time: 2.0
+    max_rotational_vel: 1.0
+    min_rotational_vel: 0.4
+    rotational_acc_lim: 3.2
+
+
+# recoveries_server:
+#   ros__parameters:
+#     costmap_topic: local_costmap/costmap_raw
+#     footprint_topic: local_costmap/published_footprint
+#     cycle_frequency: 10.0
+#     recovery_plugins: ["spin", "back_up", "wait"]
+#     spin:
+#       plugin: "nav2_recoveries/Spin"
+#     back_up:
+#       plugin: "nav2_recoveries/BackUp"
+#     wait:
+#       plugin: "nav2_recoveries/Wait"
+#     global_frame: odom
+#     robot_base_frame: base_link
+#     transform_timeout: 0.1
+#     use_sim_time: true
+#     simulate_ahead_time: 2.0
+#     max_rotational_vel: 0.01
+#     min_rotational_vel: 0.005
+#     rotational_acc_lim: 3.2
+
+
+robot_state_publisher:
+  ros__parameters:
+    use_sim_time: True
+
+waypoint_follower:
+  ros__parameters:
+    use_sim_time: True
+    loop_rate: 20
+    stop_on_failure: false
+    waypoint_task_executor_plugin: "wait_at_waypoint"
+    wait_at_waypoint:
+      plugin: "nav2_waypoint_follower::WaitAtWaypoint"
+      enabled: True
+      waypoint_pause_duration: 200
+      
+      
+      
+velocity_smoother:
+  ros__parameters:
+    smoothing_frequency: 20.0
+    scale_velocities: false
+    feedback: "OPEN_LOOP"
+    max_velocity: [0.5, 0.0, 2.5]
+    min_velocity: [-0.5, 0.0, -2.5]
+    deadband_velocity: [0.0, 0.0, 0.0]
+    velocity_timeout: 1.0
+    max_accel: [2.5, 0.0, 3.2]
+    max_decel: [-2.5, 0.0, -3.2]
+    odom_topic: odometry/filtered
+    odom_duration: 0.1
+    use_realtime_priority: false
+    enable_stamped_cmd_vel: false
+    stamp_smoothed_velocity_with_smoothing_time: false  # ONLY IN JAZZY
+    
+    
+#new exTRA lifecycle nodes 
+collision_monitor:
+  ros__parameters:
+    base_frame_id: "base_footprint"
+    odom_frame_id: "odom"
+    cmd_vel_in_topic: "cmd_vel_smoothed"
+    cmd_vel_out_topic: "cmd_vel"
+    state_topic: "collision_monitor_state"
+    enable_stamped_cmd_vel: false
+    transform_tolerance: 0.2
+    source_timeout: 1.0
+    base_shift_correction: True
+    stop_pub_timeout: 2.0
+    # Polygons represent zone around the robot for "stop", "slowdown" and "limit" action types,
+    # and robot footprint for "approach" action type.
+    polygons: ["FootprintApproach"]
+    FootprintApproach:
+      type: "polygon"
+      action_type: "approach"
+      footprint_topic: "local_costmap/published_footprint"
+      time_before_collision: 1.2
+      simulation_time_step: 0.1
+      min_points: 6
+      visualize: False
+      enabled: True
+    observation_sources: ["scan"]
+    scan:
+      type: "scan"
+      topic: "scan"
+      min_height: 0.15
+      max_height: 2.0
+      enabled: True
+
+# docking_server:
+#   ros__parameters:
+#     controller_frequency: 50.0
+#     initial_perception_timeout: 5.0
+#     wait_charge_timeout: 5.0
+#     dock_approach_timeout: 30.0
+#     enable_stamped_cmd_vel: false
+#     undock_linear_tolerance: 0.05
+#     undock_angular_tolerance: 0.1
+#     max_retries: 3
+#     base_frame: "base_link"
+#     fixed_frame: "odom"
+#     dock_prestaging_tolerance: 0.5
+#     service_introspection_mode: "disabled"
+
+#     # Types of docks
+#     dock_plugins: ["simple_charging_dock"]
+#     simple_charging_dock:
+#       plugin: "opennav_docking::SimpleChargingDock"
+#       docking_threshold: 0.05
+#       staging_x_offset: -0.7
+#       use_external_detection_pose: true
+#       use_battery_status: false # true
+#       use_stall_detection: false # true
+#       dock_direction: "forward"
+
+#       external_detection_timeout: 1.0
+#       external_detection_translation_x: -0.18
+#       external_detection_translation_y: 0.0
+#       external_detection_rotation_roll: -1.57
+#       external_detection_rotation_pitch: -1.57
+#       external_detection_rotation_yaw: 0.0
+#       filter_coef: 0.1
+
+#     # Dock instances
+#     # The following example illustrates configuring dock instances.
+#     # docks: ['home_dock']  # Input your docks here
+#     # home_dock:
+#     #   type: 'simple_charging_dock'
+#     #   frame: map
+#     #   pose: [0.0, 0.0, 0.0]
+
+#     controller:
+#       k_phi: 3.0
+#       k_delta: 2.0
+#       v_linear_min: 0.15
+#       v_linear_max: 0.15
+#       use_collision_detection: true
+#       costmap_topic: "local_costmap/costmap_raw"
+#       footprint_topic: "local_costmap/published_footprint"
+#       transform_tolerance: 0.1
+#       projection_time: 5.0
+#       simulation_step: 0.1
+#       dock_collision_threshold: 0.3
+
+
+docking_server:
+  ros__parameters:
+    use_sim_time: true
+    controller_frequency: 50.0
+    initial_perception_timeout: 20.0  # Default 5.0 
+    wait_charge_timeout: 5.0
+    dock_approach_timeout: 30.0
+    undock_linear_tolerance: 0.30 #0.05
+    undock_angular_tolerance: 0.0 #0.05
+    max_retries: 3
+    base_frame: "base_link"
+    fixed_frame: "odom"
+    dock_backwards: false #false
+    dock_prestaging_tolerance: 0.5
+    enable_stamped_cmd_vel: false
+    rotation_angular_tolerance: 3.14
+    odom_topic: /odometry/filtered
+
+ 
+    # Types of docks
+    dock_plugins: ['rosmaster_x3_dock']
+    rosmaster_x3_dock:
+      plugin: 'opennav_docking::SimpleChargingDock'
+      docking_threshold: 0.1
+      dock_direction: forward   #forward
+      staging_x_offset: 3.0  #0.75
+      staging_yaw_offset: 3.14 #3.14
+      use_external_detection_pose: true
+      use_battery_status: false
+      use_stall_detection: false
+      stall_velocity_threshold: 1.0
+      stall_effort_threshold: 1.0
+      charging_threshold: 0.5
+      rotate_to_dock: false #false
+      # enable_stamped_cmd_vel: false
+      external_detection_timeout: 1.0
+      external_detection_translation_x: -0.26 #-0.18  #distance from base_link to docking port
+      external_detection_translation_y: 0.0
+      external_detection_rotation_roll: -1.57
+      external_detection_rotation_pitch: 1.57
+      external_detection_rotation_yaw: 0.0
+      filter_coef: 0.2 #0.1
+ 
+    # Dock instances
+    dock_database: $(find-pkg-share clean_bot_docking)/config/dock_database.yaml
+ 
+    controller:
+      k_phi: 3.0
+      k_delta: 2.0
+      beta: 0.4
+      lambda: 2.0
+      v_linear_min: 0.1
+      v_linear_max: 0.15
+      v_angular_max: 0.75
+      slowdown_radius: 0.25
+      use_collision_detection: false #true
+      costmap_topic: "/local_costmap/costmap_raw"
+      footprint_topic: "/local_costmap/published_footprint"
+      transform_tolerance: 0.5   #0.1
+      projection_time: 5.0
+      simulation_step: 0.1
+      dock_collision_threshold: 0.0  #0.3 
+
+loopback_simulator:
+  ros__parameters:
+    base_frame_id: "base_footprint"
+    odom_frame_id: "odom"
+    map_frame_id: "map"
+    scan_frame_id: "base_scan" # tb4_loopback_simulator.launch.py remaps to 'rplidar_link'
+    update_duration: 0.02
+    scan_range_min: 0.05
+    scan_range_max: 30.0
+    scan_angle_min: -3.1415
+    scan_angle_max: 3.1415
+    scan_angle_increment: 0.02617
+    scan_use_inf: true
+
+
+# route_server:
+#   ros__parameters:
+#     # The graph_filepath does not need to be specified since it going to be set by defaults in launch.
+#     # If you'd rather set it in the yaml, remove the default "graph" value in the launch file(s).
+#     # file & provide full path to map below. If graph config or launch default is provided, it is used
+#     # graph_filepath: $(find-pkg-share nav2_route)/graphs/aws_graph.geojson
+#     boundary_radius_to_achieve_node: 0.0
+#     radius_to_achieve_node: 0.0
+#     smooth_corners: false
+#     operations: ["AdjustSpeedLimit", "ReroutingService", "CollisionMonitor"]
+#     ReroutingService:
+#       plugin: "nav2_route::ReroutingService"
+#     AdjustSpeedLimit:
+#       plugin: "nav2_route::AdjustSpeedLimit"
+#     CollisionMonitor:
+#       plugin: "nav2_route::CollisionMonitor"
+#       max_collision_dist: 0.5
+#     edge_cost_functions: ["DistanceScorer", "CostmapScorer"]
+#     DistanceScorer:
+#       plugin: "nav2_route::DistanceScorer"
+#     CostmapScorer:
+#       plugin: "nav2_route::CostmapScorer"
+
+# route_server:
+#   ros__parameters:
+
+#     base_frame: "base_link"                       # Robot's base frame
+#     route_frame: "map"                            # Global reference frame
+#     path_density: 0.05                            # Density of points for generating the dense nav_msgs/Path from route (m)
+#     max_iterations: 0                             # Maximum number of search iterations, if 0, uses maximum possible
+#     max_planning_time: 2.0                        # Maximum planning time (seconds)
+#     smoothing_corners: true                       # Whether to smooth corners formed by adjacent edges or not
+#     smoothing_radius: 1.0                         # Radius of corner to fit into the corner
+
+#     graph_file_loader: "GeoJsonGraphFileLoader"   # Name of default file loader
+#     plugin: nav2_route::GeoJsonGraphFileLoader  # file loader plugin to use
+#     graph_filepath: ""                            # file path to graph to use
+
+#     edge_cost_functions: ["DistanceScorer", "DynamicEdgesScorer"]  # Edge scoring cost functions to use
+#     DistanceScorer:
+#       plugin: "nav2_route::DistanceScorer"
+#     DynamicEdgesScorer:
+#       plugin: "nav2_route::DynamicEdgesScorer"
+
+#     operations: ["AdjustSpeedLimit", "ReroutingService"] # Route operations plugins to use
+#     AdjustSpeedLimit:
+#       plugin: "nav2_route::AdjustSpeedLimit"
+#     ReroutingService:
+#       plugin: "nav2_route::ReroutingService"
+
+#     tracker_update_rate: 50.0                     # Rate at which to check the status of path tracking
+#     aggregate_blocked_ids: false                  # Whether to aggregate the blocked IDs reported by route operations over the lifespan of the navigation request or only use the currently blocked IDs.
+#     boundary_radius_to_achieve_node: 1.0          # Radius (m) near boundary nodes (e.g. start/end) to enable evaluation of achievement metric
+#     radius_to_achieve_node: 2.0                   # Radius (m) near route nodes as preliminary condition for evaluation of achievement metric
+
+#     max_prune_dist_from_edge: 8.0                       # Max distance from an edge to consider pruning it as in-progress (e.g. if we're too far away from the edge, its nonsensical to prune it)
+#     min_prune_dist_from_goal: 0.15                      # Min distance from goal node away from goal pose to consider goal node pruning as considering it as being passed (in case goal pose is very close to a goal node, but not exact)
+#     min_prune_dist_from_start: 0.10                     # Min distance from start node away from start pose to consider start node pruning as considering it as being passed (in case start pose is very close to a start node, but not exact)
+#     prune_goal: true                              # Whether pruning the goal nodes from the route due to being past the goal pose requested is possible (pose requests only)
+
+route_server:
+  ros__parameters:
+    /bond_disable_heartbeat_timeout: true
+    AdjustSpeedLimit:
+      plugin: nav2_route::AdjustSpeedLimit
+      speed_limit_topic: speed_limit
+      speed_tag: speed_limit
+    CollisionMonitor:
+      check_resolution: 1
+      costmap_topic: local_costmap/costmap_raw
+      max_collision_dist: 0.5
+      max_cost: 1.0 #253.0
+      plugin: nav2_route::CollisionMonitor
+      rate: 1.0
+      reroute_on_collision: true
+    CostmapScorer:
+      check_resolution: 2
+      costmap_topic: global_costmap/costmap_raw
+      invalid_off_map: true
+      invalid_on_collision: true
+      max_cost: 1.0   #253.0
+      plugin: nav2_route::CostmapScorer
+      use_maximum: true
+      weight: 1.0
+    DistanceScorer:
+      plugin: nav2_route::DistanceScorer
+      speed_tag: speed_limit
+      weight: 1.0
+    GeoJsonGraphFileLoader:
+      plugin: nav2_route::GeoJsonGraphFileLoader
+    ReroutingService:
+      plugin: nav2_route::ReroutingService
+    aggregate_blocked_ids: false
+    autostart_node: false
+    base_frame: base_link
+    bond_heartbeat_period: 0.1
+    boundary_radius_to_achieve_node: 0.0
+    costmap_topic: global_costmap/costmap_raw
+    edge_cost_functions:
+    - DistanceScorer
+    - CostmapScorer
+    enable_nn_search: true
+    graph_file_loader: GeoJsonGraphFileLoader
+    graph_filepath: /home/charann-inc5751/test.geojson
+    max_iterations: 0
+    max_nn_search_iterations: 10000
+    max_planning_time: 2.0
+    max_prune_dist_from_edge: 8.0
+    min_prune_dist_from_goal: 0.15
+    min_prune_dist_from_start: 0.1
+    num_nearest_nodes: 5
+    operations:
+    - AdjustSpeedLimit
+    - ReroutingService
+    - CollisionMonitor
+    path_density: 0.05
+    prune_goal: false
+    qos_overrides:
+      /clock:
+        subscription:
+          depth: 1
+          durability: volatile
+          history: keep_last
+          reliability: best_effort
+    radius_to_achieve_node: 0.0
+    route_frame: map
+    smooth_corners: false
+    smoothing_radius: 1.0
+    tracker_update_rate: 50.0
+    use_sim_time: true
+
+
+# docking_server:
+#   ros__parameters:
+#     /bond_disable_heartbeat_timeout: true
+#     action_server_result_timeout: 10.0
+#     autostart_node: false
+#     base_frame: base_link
+#     bond_heartbeat_period: 0.1
+#     controller:
+#       beta: 0.4
+#       costmap_topic: /local_costmap/costmap_raw
+#       dock_collision_threshold: 0.3
+#       footprint_topic: /local_costmap/published_footprint
+#       k_delta: 2.0
+#       k_phi: 3.0
+#       lambda: 2.0
+#       projection_time: 5.0
+#       rotate_to_heading_angular_vel: 1.0
+#       rotate_to_heading_max_angular_accel: 3.2
+#       simulation_time_step: 0.1
+#       slowdown_radius: 0.25
+#       transform_tolerance: 0.1
+#       use_collision_detection: true
+#       v_angular_max: 0.75
+#       v_linear_max: 0.15
+#       v_linear_min: 0.1
+#     controller_frequency: 10.0
+#     dock_approach_timeout: 30.0
+#     dock_backwards: false
+#     dock_database: /home/charann-inc5751/ros2_ws/install/clean_bot_docking/share/clean_bot_docking/config/dock_database.yaml
+#     dock_plugins:
+#     - rosmaster_x3_dock
+#     dock_prestaging_tolerance: 0.5
+#     enable_stamped_cmd_vel: false
+#     fixed_frame: odom
+#     initial_perception_timeout: 20.0
+#     max_retries: 3
+#     # navigator_bt_xml: ''
+#     odom_topic: odom
+#     qos_overrides:
+#       /clock:
+#         subscription:
+#           depth: 1
+#           durability: volatile
+#           history: keep_last
+#           reliability: best_effort
+#     rosmaster_x3_dock:
+#       charging_threshold: 0.5
+#       dock_direction: forward
+#       docking_threshold: 0.02
+#       external_detection_rotation_pitch: 1.57
+#       external_detection_rotation_roll: -1.57
+#       external_detection_rotation_yaw: 0.0
+#       external_detection_timeout: 1.0
+#       external_detection_translation_x: -0.18
+#       external_detection_translation_y: 0.0
+#       filter_coef: 0.1
+#       plugin: opennav_docking::SimpleChargingDock
+#       rotate_to_dock: false
+#       staging_x_offset: 0.75
+#       staging_yaw_offset: 3.14
+#       stall_effort_threshold: 1.0
+#       stall_joint_names: []
+#       stall_velocity_threshold: 1.0
+#       use_battery_status: false
+#       use_external_detection_pose: true
+#       use_stall_detection: false
+#     rotate_to_dock_timeout: 10.0
+#     rotation_angular_tolerance: 0.05
+#     undock_angular_tolerance: 0.05
+#     undock_linear_tolerance: 0.05
+#     use_sim_time: true
+#     wait_charge_timeout: 5.0

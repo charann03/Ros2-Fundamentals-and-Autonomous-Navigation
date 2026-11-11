@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<robot name="tortoisebot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:include filename="tortoisebot_differential_t5.xacro"/>
+    <xacro:include filename="depth_camera.xacro"/>
+    <xacro:include filename="lidar.xacro"/>
+
+
+
+
+
+</robot>

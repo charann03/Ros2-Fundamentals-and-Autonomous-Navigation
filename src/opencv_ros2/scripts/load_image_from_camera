@@ -1,0 +1,67 @@
+#!/usr/bin/env python3
+
+import rclpy
+from rclpy.node import Node
+import cv2
+from cv_bridge import CvBridge , CvBridgeError
+from sensor_msgs.msg import Image
+
+class LoadImage(Node):  #Modify node_class_name heRe
+
+    def __init__(self):
+        super().__init__("Load_Image_Node")   #Modify node_mame heRe
+        # self.picture = picture
+        self.image_sub = self.create_subscription(Image, "/camera/image_raw", self.camera_callback, 10)
+        self.bridge_object = CvBridge()
+        self.image_saved = False
+    # def read_photo(self):
+    #     img = cv2.imread(self.picture)
+    #     cv2.imshow('image', img)
+    #     cv2.waitKey(0)
+
+    def camera_callback(self ,data: Image):
+        try:
+            """this function takes image data from ros
+             and makes opencv compatible make
+             sure the image encoding is
+             same as the encoding that we give in the 
+            camera plugin in urdf ie.. for depth camera
+             we give B8G8R8 so her it becomes bgr8"""
+            
+            cv_image = self.bridge_object.imgmsg_to_cv2(img_msg= data, desired_encoding="bgr8")  
+        except CvBridgeError as e:
+            print(e)
+        img_path = "/home/charann-inc5751/ros2_ws/src/opencv_ros2/images/output"
+        # save the image in the path
+        if not self.image_saved:
+            cv2.imwrite(
+                img_path + "/camera_output.png",
+                cv_image
+            )
+            self.image_saved = True
+            self.get_logger().info("Image saved successfully")
+        #show the image 
+        cv2.imshow('image_output', cv_image)
+        # cv2.waitKey(0) #waits forever and gets terminated only if 0 is pressesd on the image window
+        cv2.waitKey(1) #waits 1 millisecond and moves to the next line of code ,so nade can be terminated by ctrl+c in terminal
+#for proper shutdown node
+def main(args=None):
+    rclpy.init(args=args)
+
+    node = LoadImage()
+
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        node.get_logger().info("Shutting down...")
+    finally:
+        node.destroy_node()
+        cv2.destroyAllWindows()
+
+        if rclpy.ok():
+            rclpy.shutdown()
+
+
+if __name__ == "__main__":
+    main()
+

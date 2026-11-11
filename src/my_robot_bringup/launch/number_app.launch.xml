@@ -1,0 +1,38 @@
+<launch>
+
+<node pkg="my_robot_py_pkg" exec="num_pub" name="my_number_publishr" namespace="/abc">
+<!-- if to use remap name along with name_space name then remove ("/") from topic name
+ie... 
+        from :
+             
+             <remap from="/number" to="/my_number"/>
+        to:
+             <remap from="number" to="my_number"/>
+-->
+
+    <remap from="number" to="my_number"/>
+</node>
+
+
+<!-- syntax to run each node inslaunch
+<node pkg="<package_name>" exec="<executable_name>" name="rename_node_name"> 
+
+    <remap from="</current_topic_name>" to="</new_topic_name>"/>
+    #adding parameter files: make sure you added share and config in cmake_lists_.txt
+    <param from="$(find-pkg-share <launch_file_package_name>)/config/<parameter_file(the yaml file created in config)>"/>
+
+</node>
+
+-->
+
+<node pkg="my_robot_py_pkg" exec="num_count" namespace="/abc">
+<remap from="number" to="my_number"/>
+</node>
+<node pkg="my_robot_py_pkg" exec="number_pub_param" >
+<!-- <param name="number" value="6" />
+<param name="time_period" value="1.5" /> -->
+<param from="$(find-pkg-share my_robot_bringup)/config/number_app.yaml"/>
+</node>
+
+
+</launch>

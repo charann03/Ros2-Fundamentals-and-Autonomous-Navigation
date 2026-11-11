@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+
+# import rclpy
+# import cv2
+
+# class LoadImage:
+#     def __init__(self, picture):
+#         self.picture = picture
+    
+#     def read_photo(self):
+#         img = cv2.imread(self.picture)
+#         cv2.imshow('image', img)
+#         cv2.waitKey(0)
+
+# if __name__ == '__main__':
+#     image = '/home/charann-inc5751/ros2_ws/src/opencv_ros2/images/input/cobot.png'
+#     load_image_object = LoadImage(image)
+#     load_image_object.read_photo()
+
+
+
+
+import rclpy
+from rclpy.node import Node
+import cv2
+
+
+class LoadImage(Node):  #Modify node_class_name heRe
+
+    def __init__(self, picture):
+        super().__init__("Load_Image_Node")   #Modify node_mame heRe
+        self.picture = picture
+
+    def read_photo(self):
+        img = cv2.imread(self.picture)
+        cv2.imshow('image', img)
+        cv2.waitKey(0)
+
+def main(args = None):
+    rclpy.init(args= args)
+    image = '/home/charann-inc5751/ros2_ws/src/opencv_ros2/images/input/cobot.png'
+    node = LoadImage(image)
+    node.read_photo()        #Modify  node_class_name heRE
+    rclpy.spin(node)
+    rclpy.shutdown()
+
+
+if __name__ == "__main__":
+    main()
+
+
+
+

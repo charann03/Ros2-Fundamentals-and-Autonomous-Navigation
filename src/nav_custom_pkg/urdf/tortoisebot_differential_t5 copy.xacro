@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<robot name="tortoisebot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <link name="base_footprint">
+    
+</link>
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.6 0.3 0.3"/>
+      </geometry>
+      <material name="silver">
+        <color rgba="0.75 0.75 0.75 1"/>
+      </material>
+      <origin rpy="0 0 0" xyz="0.3 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.6 0.3 0.3"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.03" iyy="0.075" izz="0.075" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  
+
+  <link name="front_caster">
+    <visual>
+      <geometry>
+        <box size="0.1 0.1 0.15"/>
+      </geometry>
+      <material name="silver"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.1 0.1 0.15"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.00166" iyy="0.00166" izz="0.000334" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="front_caster_joint" type="continuous">
+    <axis xyz="0 0 1"/>
+    <parent link="base_link"/>
+    <child link="front_caster"/>
+    <origin rpy="0 0 0" xyz="0.6 0 -0.075"/>
+  </joint>
+
+  <link name="front_wheel">
+    <visual>
+      <geometry>
+        <cylinder length="0.05" radius="0.035"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="0.035"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="1.02916e-4" iyy="1.02916e-4" izz="1.225e-4" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="front_wheel_joint" type="continuous">
+    <axis xyz="0 0 1"/>
+    <parent link="front_caster"/>
+    <child link="front_wheel"/>
+    <origin rpy="-1.5708 0 0" xyz="0.05 0 -.075"/>
+  </joint>
+
+  <link name="right_wheel">
+    <visual>
+      <geometry>
+        <cylinder length="0.05" radius="0.035"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.05" radius="0.035"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="1.02916e-4" iyy="1.02916e-4" izz="1.225e-4" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="right_wheel_joint" type="continuous">
+    <axis xyz="0 0 1"/>
+    <parent link="base_link"/>
+    <child link="right_wheel"/>
+    <origin rpy="-1.5708 0 0" xyz="0.0175 -0.125 -.15"/>
+  </joint>
+
+  <link name="left_wheel">
+    <visual>
+      <geometry>
+        <cylinder length="0.05" radius="0.035"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.05" radius="0.035"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="1.02916e-4" iyy="1.02916e-4" izz="1.225e-4" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="left_wheel_joint" type="continuous">
+    <axis xyz="0 0 1"/>
+    <parent link="base_link"/>
+    <child link="left_wheel"/>
+    <origin rpy="-1.5708 0 0" xyz="0.0175 0.125 -.15"/>
+  </joint>
+
+
+
+<joint name="base_footprint_joint" type="fixed">
+    <origin xyz="0.0 0.0 0.1675" rpy="0.0 0.0 0.0"/>
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+
+</joint>
+
+    <gazebo reference="front_wheel">
+        <material>Gazebo/Grey</material>
+        <!--friction coefficients to make the castor slide over the surface since it is a fixed joint!!!!!!-->
+  <mu1>10.0</mu1>
+  <mu2>10.0</mu2>
+    </gazebo>
+
+    <gazebo reference="left_wheel">
+            <material>Gazebo/Grey</material>
+  <mu1>10.0</mu1>
+  <mu2>10.0</mu2>
+</gazebo>
+
+    <gazebo reference="right_wheel">
+            <material>Gazebo/Grey</material>
+  <mu1>10.0</mu1>
+  <mu2>10.0</mu2>
+</gazebo>
+
+
+
+</robot>

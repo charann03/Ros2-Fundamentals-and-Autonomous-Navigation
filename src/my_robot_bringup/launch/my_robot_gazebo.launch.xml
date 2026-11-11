@@ -1,0 +1,26 @@
+<launch>
+    <!--remember to add dependency of the packages in package.xml file-->
+
+    <let name="urdf_path" value="$(find-pkg-share my_robot_description)/urdf/my_robot.urdf.xacro" />
+    <!--    <let mane="urdf_path"#creating a variable called "urdf_path" value="$(find-pkg-share my_robot_desciption)/urdf/my_robot.urdf" #value="$(find-pkg-share <package_name>)/<urdf_folder_name>/<urdf_file_name.urdf" />
+-->
+    <let name="rviz_path" value="$(find-pkg-share my_robot_bringup)/rviz_config_files/my_robot.rviz" />
+
+ 
+    <node pkg="robot_state_publisher" exec="robot_state_publisher">
+        <param name="robot_description" value="$(command 'xacro $(var urdf_path)')"/> <!-- command to run a xacro file!! -->
+    </node>
+
+    <include file="$(find-pkg-share gazebo_ros)/launch/gazebo.launch.py">
+    <!--including custom world in gazebo sim-->
+    <arg name="world" value="$(find-pkg-share my_robot_bringup)/gazebo_world/dummy_world.world"/>
+    </include>
+
+    <!--note we are writing the node start command into a xml format the below line can be executed in terminal like
+     "ros2 run gazebo_ros spawn_entity.py -topic robot_description -entity my_robot
+"-->
+    <node pkg="gazebo_ros" exec="spawn_entity.py"
+          args="-topic robot_description -entity my_robot"/>
+
+    <node pkg="rviz2" exec="rviz2" output="screen" args="-d $(var rviz_path)"/>
+</launch>

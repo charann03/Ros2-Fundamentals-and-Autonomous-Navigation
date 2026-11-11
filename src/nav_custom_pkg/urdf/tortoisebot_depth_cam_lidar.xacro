@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<robot name="tortoisebot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- <xacro:include filename="base_footprint.xacro"/> -->
+    <xacro:include filename="tortoisebot_differential_t5.xacro"/>
+        <!-- <xacro:include filename="tortoisebot_differential_t5 copy.xacro"/> -->
+
+    <xacro:arg name="use_ros2_control" default="true"/>
+    <xacro:if value="$(arg use_ros2_control)" >
+        <xacro:include filename="tortoisebot_ros2_control.xacro"/>
+    </xacro:if>
+    <xacro:unless value="$(arg use_ros2_control)" >
+        <xacro:include filename="tortoisebot_gazebo.xacro"/>
+            <!-- <xacro:include filename="tortoisebot_test_gazebo.xacro"/> -->
+                    <!-- <xacro:include filename="gazebo_urdf_test.xacro"/> -->
+
+    </xacro:unless>
+    <xacro:include filename="depth_camera.xacro"/>
+    <xacro:include filename="lidar.xacro"/>
+    <!-- <xacro:include filename="depth_camera_fixed.xacro"/> -->
+    <!-- <xacro:include filename="fixed_frame.xacro"/> -->
+
+
+
+
+
+
+
+</robot>

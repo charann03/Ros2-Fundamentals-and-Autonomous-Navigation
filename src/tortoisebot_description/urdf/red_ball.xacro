@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<robot name="ball" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<link name="ball">
+    <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <mass value="2.0"/>
+        <inertia ixx="0.2" ixy="0.0" ixz="0.0" iyy="0.2" iyz="0.0" izz="0.2"/>
+    </inertial>
+    <visual name="">
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+            <sphere radius="0.5"/>
+        </geometry>
+        <material name="">
+            <color rgba="1.0 0.0 0.0 1.0"/>
+        </material>
+    </visual>
+    <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+            <sphere radius="0.5"/>
+        </geometry>
+    </collision>
+</link>
+<link name= "ball_surface"/>
+<joint name="ball_rotation" type="continuous">
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+    <parent link="ball_surface"/>
+    <child link="ball"/>
+    <axis xyz="1.0 1.0 0.0"/>
+</joint>
+
+
+
+<gazebo reference="ball">
+        <material>Gazebo/Red</material>
+        <!--friction coefficients to make the castor slide over the surface since it is a fixed joint!!!!!!-->
+        <!-- <mu1 value="0.1" />
+        <mu2 value="0.1" /> -->
+</gazebo>
+<gazebo>
+
+    <plugin name="gazebo_ros_planar_move" filename="libgazebo_ros_planar_move.so">
+
+      <ros>
+
+        <!-- Add a namespace -->
+        <namespace>/ball</namespace>
+
+        <!-- Remap the default topic -->
+        <remapping>cmd_vel:=custom_cmd_vel</remapping>
+        <remapping>odom:=custom_odom</remapping>
+
+      </ros>
+
+      <update_rate>100</update_rate>
+      <publish_rate>10</publish_rate>
+
+      <!-- output -->
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+
+      <odometry_frame>odom_demo</odometry_frame>
+      <robot_base_frame>ball_surface</robot_base_frame>
+
+      <covariance_x>0.0001</covariance_x>
+      <covariance_y>0.0001</covariance_y>
+      <covariance_yaw>0.01</covariance_yaw>
+
+    </plugin>
+</gazebo>
+
+</robot>

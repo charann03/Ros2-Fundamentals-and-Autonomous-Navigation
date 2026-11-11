@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<robot name="tortoisebot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<link name="fixed_frame_link">
+    
+</link>
+<joint name="fixed_frame_joint" type="fixed">
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+    <parent link="fixed_frame_link"/>
+    <child link="base_footprint"/>
+    <axis xyz="0.0 0.0 0.0"/>
+</joint>
+
+</robot>

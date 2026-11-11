@@ -1,0 +1,26 @@
+# ROS 2
+build/
+install/
+log/
+bag_files/
+
+# VS Code
+.vscode/
+**/.vscode/
+
+# ROS databases and mapping data
+*.db
+*.db3
+*.bag
+*.mcap
+
+# Large archives
+*.zip
+
+# Python
+__pycache__/
+*.pyc
+
+# Temporary files
+*.swp
+*.tmp

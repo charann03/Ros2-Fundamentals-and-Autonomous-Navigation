@@ -1,0 +1,188 @@
+#!/usr/bin/env python3
+# NOTE: this node needs conda evironment to run,
+#  to run this node enable conda environment
+# >>> conda activate yolo-ros
+import rclpy
+from rclpy.node import Node
+import cv2
+from cv_bridge import CvBridge , CvBridgeError
+from sensor_msgs.msg import Image
+from ultralytics import YOLO
+from std_msgs.msg import Int64MultiArray
+from std_msgs.msg import Bool
+
+class ObjectDetection(Node):  #Modify node_class_name heRe
+
+    def __init__(self):
+        super().__init__("Object_Detection_Node")   #Modify node_mame heRe
+        # self.picture = picture
+        self.image_sub = self.create_subscription(Image, "/camera/image_raw", self.camera_callback, 1)
+        self.bridge_object = CvBridge()
+        self.model = YOLO(
+    "/home/charann-inc5751/ros2_ws/src/opencv_ros2/yolo/master_robot/my_model/train/weights/best.pt"
+            )
+        #detected object centre publish
+        #less queue size for real_time data
+        # self.pub_centre = self.create_publisher(Int64MultiArray, "/object_center_coords", 1)
+        self.pub_object_detection_bool = self.create_publisher(Bool, "/bool_object_detection", 1)
+        self.annotated_image_pub = self.create_publisher(Image, "/detected_object_image", 1)
+        self.pub_bounding_box = self.create_publisher(Int64MultiArray, "/bounding_box_array", 1)
+
+    def camera_callback(self, data: Image):
+
+        try:
+            #converting sensor_msgs/image to cv2 image
+            cv_image = self.bridge_object.imgmsg_to_cv2(
+                data,
+                desired_encoding="bgr8"
+            )
+            # to publish cv2 images into ros
+            # crop_msg = self.bridge_object.cv2_to_imgmsg(
+            #     crop,
+            #     encoding="bgr8"
+            # )
+
+
+        except CvBridgeError as e:
+            self.get_logger().error(str(e))
+            return
+
+        ####################################
+        # YOLO Inference
+        ####################################
+        # cv_image = cv2.resize(cv_image, (416, 416))
+        results = self.model(cv_image, conf=0.8)
+        # print(results)
+
+
+        # Draw detections
+        annotated_frame = results[0].plot()
+
+        ####################################
+        # Save image once
+        ####################################
+
+        # if not self.image_saved:
+        #     cv2.imwrite(
+        #         "/home/charann-inc5751/ros2_ws/src/opencv_ros2/images/output/camera_output.png",
+        #         annotated_frame
+        #     )
+        #     self.image_saved = True
+        #     self.get_logger().info("Image saved")
+
+        ####################################
+        # Display
+        ####################################
+
+        # msg_ = Int64MultiArray()
+        detection_msg_ = Bool()
+
+        if len(results[0].boxes) == 0:
+            self.get_logger().info("No master_robot detected")
+            # msg_.data.append(0)
+            # msg_.data.append(0)
+            # msg_.data.append(0)  # "0" to denote no object has been detected
+            # self.pub_centre.publish(msg_)
+            detection_msg_.data = False
+            self.pub_object_detection_bool.publish(detection_msg_)
+
+        else:
+
+
+            for box in results[0].boxes:
+
+
+                x1, y1, x2, y2 = map(int, box.xyxy[0])
+                #publish bounding box array
+                bb_array = Int64MultiArray()
+                bb_array.data = [x1, y1, x2, y2]
+                self.pub_bounding_box.publish(bb_array)
+
+                detected_crop_image = cv_image[y1: y2, x1: x2] # this is the actual syntax of cropping images [rows, columns]
+                # cv2.imshow("dectected_crop_image", detected_crop_image)
+                # #apply canny edge detection
+                # gray = cv2.cvtColor(detected_crop_image, cv2.COLOR_BGR2GRAY)
+                # edges = cv2.Canny(gray, 150, 150)
+                # cv2.imshow("detected edges", edges)
+                # publish images from cv2 to ros2
+                # for box in results[0].boxes:
+
+                #     x1, y1, x2, y2 = map(int, box.xyxy[0])
+
+                #     crop = cv_image[y1:y2, x1:x2]
+
+                #     crop_msg = self.bridge_object.cv2_to_imgmsg(
+                #         crop,
+                #         encoding="bgr8"
+                #     )
+
+                #     crop_msg.header = data.header
+
+                #     self.crop_pub.publish(crop_msg)
+
+                confidence = float(box.conf[0])
+                class_id = int(box.cls[0])
+                class_name = self.model.names[class_id]
+
+                # Center of bounding box
+                cx = (x1 + x2) // 2
+                cy = (y1 + y2) // 2
+
+                # Draw center
+                cv2.circle(annotated_frame, (cx, cy), 5, (0, 0, 255), -1)
+
+                # Draw coordinates
+                cv2.putText(
+                    annotated_frame,
+                    f"({cx}, {cy})",
+                    (cx + 10, cy - 10),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5,
+                    (0, 255, 0),
+                    2
+                )
+
+                self.get_logger().info(
+                    f"{class_name} | Center: ({cx}, {cy}) | Confidence: {confidence:.2f}"
+                )
+
+                #publish coordinates
+                # msg_ = Int64MultiArray()
+                # msg_.data.append(cx)
+                # msg_.data.append(cy)
+                # msg_.data.append(1)    # "1" to denote desired object has been detected
+                # self.pub_centre.publish(msg=msg_)
+                detection_msg_.data = True
+                self.pub_object_detection_bool.publish(detection_msg_)
+
+        cv2.imshow("YOLO Detection", annotated_frame)
+        annotated_frame_msg = self.bridge_object.cv2_to_imgmsg(
+            annotated_frame,
+            encoding="bgr8"
+        )
+        annotated_frame_msg.header = data.header
+        self.annotated_image_pub.publish(annotated_frame_msg)
+        cv2.waitKey(1)
+
+
+#for proper shutdown node
+def main(args=None):
+    rclpy.init(args=args)
+
+    node = ObjectDetection()
+
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        node.get_logger().info("Shutting down...")
+    finally:
+        node.destroy_node()
+        cv2.destroyAllWindows()
+
+        if rclpy.ok():
+            rclpy.shutdown()
+
+
+if __name__ == "__main__":
+    main()
+    

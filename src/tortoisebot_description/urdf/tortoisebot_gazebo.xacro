@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<robot name="tortoisebot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+    <gazebo>
+
+        <plugin name='tricycle_drive' filename='libgazebo_ros_tricycle_drive.so'>
+
+
+            <!-- wheels -->
+            <steering_joint>front_castor_joint</steering_joint>
+            <actuated_wheel_joint>front_wheel_joint</actuated_wheel_joint>
+            <encoder_wheel_left_joint>left_wheel_joint</encoder_wheel_left_joint>
+            <encoder_wheel_right_joint>right_wheel_joint</encoder_wheel_right_joint>
+
+            <!-- kinematics -->
+            <wheel_separation>0.35</wheel_separation>
+            <encoder_wheel_diameter>0.07</encoder_wheel_diameter>
+            <actuated_wheel_diameter>0.07</actuated_wheel_diameter>
+
+
+            <!-- output -->
+            <publish_odom>true</publish_odom>
+            <publish_wheel_tf>true</publish_wheel_tf>
+            <publish_wheel_joint_state>true</publish_wheel_joint_state>
+
+            <odometry_frame>odom</odometry_frame>
+            <robot_base_frame>base_footprint</robot_base_frame>
+        </plugin>
+    </gazebo>
+
+</robot>
+

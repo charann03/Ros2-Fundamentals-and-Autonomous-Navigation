@@ -1,0 +1,20 @@
+<launch>
+    <let name="rviz_path" value="$(find-pkg-share tortoisebot_description)/rviz_config_files/task_5_test.rviz" />
+
+        <include file="$(find-pkg-share nav_custom_pkg)/launch/tortoisebot_ros2_control_fusion.launch.py">
+            <arg name="use_ros2_control" value="false"/>
+
+
+    </include>
+            <include file="$(find-pkg-share nav_custom_pkg)/launch/merge_lsr.launch.py">
+
+    </include>
+                <include file="$(find-pkg-share nav_custom_pkg)/launch/pcl2_to_lsrscn.launch.py">
+
+    </include>
+        <!-- <node pkg="nav_custom_pkg" exec="laserscn_fuse.py"/>     -->
+        
+    <node pkg="nav_custom_pkg" exec="scan_best_effort.py"/>    
+        <node pkg="rviz2" exec="rviz2" output="screen" args="-d $(var rviz_path)"/>
+
+</launch>

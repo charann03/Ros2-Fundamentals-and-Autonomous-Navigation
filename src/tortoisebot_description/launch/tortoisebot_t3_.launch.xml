@@ -1,0 +1,31 @@
+<launch>
+    <!-- <let name="turtle_urdf_path" value="$(find-pkg-share tortoisebot_description)/urdf/tortoisebot_deploy.urdf.xacro" /> -->
+    <let name="turtle_urdf_path" value="$(find-pkg-share tortoisebot_description)/urdf/tortoisebot_lidar.xacro" />
+    <!-- <let name="ball_urdf_path" value="$(find-pkg-share tortoisebot_description)/urdf/ball.xacro" /> -->
+
+    <!--    <let mane="urdf_path"#creating a variable called "urdf_path" value="$(find-pkg-share my_robot_desciption)/urdf/my_robot.urdf" #value="$(find-pkg-share <package_name>)/<urdf_folder_name>/<urdf_file_name.urdf" />
+-->
+    <!-- <let name="rviz_path" value="$(find-pkg-share tortoisebot_description)/rviz_config_files/tortoisebot.rviz" /> -->
+
+
+    <node pkg="robot_state_publisher" exec="robot_state_publisher">
+        <param name="robot_description" value="$(command 'xacro $(var turtle_urdf_path)')"/> <!-- command to run a xacro file!! -->
+    </node>
+
+    <include file="$(find-pkg-share gazebo_ros)/launch/gazebo.launch.py">
+    <!-- including custom world in gazebo sim -->
+    <arg name="world" value="$(find-pkg-share tortoisebot_gazebo)/worlds/red_sphere.world"/>
+    </include>
+
+    <!-- <node pkg="joint_state_publisher" exec="joint_state_publisher"/> -->
+    
+    <node pkg="gazebo_ros" exec="spawn_entity.py"
+          args="-topic robot_description -entity tortoisebot"/>    
+          <!--trying to spawn the ball with teleoperation-->
+<!---file <urdf_path> -entity ball -->
+    <!-- <node pkg="gazebo_ros" exec="spawn_entity.py"
+          args="-file ball_urdf_path -entity ball"/>    -->
+    
+    <node pkg="rviz2" exec="rviz2" output="screen" />
+    <node pkg="my_robot_py_pkg" exec="tas_three" />
+</launch>

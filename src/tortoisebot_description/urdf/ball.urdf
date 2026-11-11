@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<robot name="ball_robot">
+
+  <!-- ================= BALL LINK ================= -->
+
+  <link name="ball">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="2.0"/>
+      <!-- Inertia for solid sphere: I = 2/5 m r^2 -->
+      <inertia 
+        ixx="0.2"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="0.2"
+        iyz="0.0"
+        izz="0.2"/>
+    </inertial>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.5"/>
+      </geometry>
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.5"/>
+      </geometry>
+    </collision>
+  </link>
+
+
+  <!-- ================= GAZEBO SETTINGS ================= -->
+
+  <gazebo reference="ball">
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+
+  <!-- ================= PLANAR MOVE PLUGIN ================= -->
+
+  <gazebo>
+    <plugin name="gazebo_ros_planar_move"
+            filename="libgazebo_ros_planar_move.so">
+
+      <ros>
+        <namespace>/ball</namespace>
+        <remapping>cmd_vel:=custom_cmd_vel</remapping>
+        <remapping>odom:=custom_odom</remapping>
+      </ros>
+
+      <update_rate>100</update_rate>
+      <publish_rate>10</publish_rate>
+
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+
+      <odometry_frame>odom_demo</odometry_frame>
+      <robot_base_frame>ball</robot_base_frame>
+
+      <covariance_x>0.0001</covariance_x>
+      <covariance_y>0.0001</covariance_y>
+      <covariance_yaw>0.01</covariance_yaw>
+
+    </plugin>
+  </gazebo>
+
+</robot>

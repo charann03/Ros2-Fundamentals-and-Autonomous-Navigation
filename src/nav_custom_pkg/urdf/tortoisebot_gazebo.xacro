@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<robot name="tortoisebot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <gazebo>
+    <plugin name="gazebo_ros_joint_state_publisher"
+        filename="libgazebo_ros_joint_state_publisher.so">
+
+
+      <!-- Update rate in Hertz -->
+      <!-- dont give update rate if given jsp redirects the left and right wheel link to base_footprint instead of base_link -->
+      <update_rate>500</update_rate>
+
+      <!-- Name of joints in the model whose states will be published. -->
+      <joint_name>front_caster_joint</joint_name>
+      <joint_name>front_wheel_joint</joint_name>
+            <joint_name>left_wheel_joint</joint_name>
+      <joint_name>right_wheel_joint</joint_name>
+
+
+    </plugin>
+    </gazebo>
+
+    <gazebo>
+
+    <plugin name="gazebo_ros_diff_drive" filename="libgazebo_ros_diff_drive.so">
+
+        <ros>
+
+        <!-- Add a namespace -->
+        <!-- <namespace>/test</namespace> -->
+
+        </ros>
+
+        <!-- Update rate in Hz "50" times per second-->
+        <!-- <update_rate>500</update_rate> -->
+
+        <!-- wheels -->
+        <left_joint>left_wheel_joint</left_joint>
+        <right_joint>right_wheel_joint</right_joint>
+
+        <!-- kinematics -->
+        <!--wheel seperation = base_width + 1/2 length of w1 + 1/2 of length of wheel2-->
+        <wheel_separation>0.25</wheel_separation>
+        <!--wheel diameter 2*wheel radius   -->
+        <wheel_diameter>0.07</wheel_diameter>
+
+        <!-- limits -->
+        <!--<max_wheel_torque>20</max_wheel_torque>
+        <max_wheel_acceleration>1.0</max_wheel_acceleration>
+        -->
+        <!-- input -->
+        <!--by default for differential drive it is cmd_vel topic so this can be romoved-->
+        <!--<command_topic>cmd_vel</command_topic> -->
+
+        <!-- output -->
+        <publish_odom>true</publish_odom> <!--  keeps track of where the robot from the start point ie.. distance traversed by the robot since the start point-->
+        <publish_odom_tf>true</publish_odom_tf> <!--keeps robot position data from the starting point-->
+        <publish_wheel_tf>true</publish_wheel_tf>
+
+        <odometry_topic>odom</odometry_topic>
+        <odometry_frame>odom</odometry_frame>
+        <!--chassis frame must be base_footprint frame because that it what holds up the entire robot up from ground-->
+        <robot_base_frame>base_footprint</robot_base_frame>
+
+    </plugin>
+    </gazebo>
+</robot>

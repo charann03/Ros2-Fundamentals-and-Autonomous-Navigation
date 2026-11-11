@@ -1,0 +1,16 @@
+<launch>
+    <let name="turtle_urdf_path" value="$(find-pkg-share my_robot_description)/urdf/turtlebot3_waffle.urdf" />
+    <!--    <let mane="urdf_path"#creating a variable called "urdf_path" value="$(find-pkg-share my_robot_desciption)/urdf/my_robot.urdf" #value="$(find-pkg-share <package_name>)/<urdf_folder_name>/<urdf_file_name.urdf" />
+-->
+        <let name="rviz_path" value="$(find-pkg-share my_robot_description)/rviz_files/my_robot.rviz" />
+
+
+    <node pkg="robot_state_publisher" exec="robot_state_publisher">
+        <param name="robot_description" value="$(command 'xacro $(var turtle_urdf_path)')"/> <!-- command to run a xacro file!! -->
+    </node>
+
+    <node pkg="joint_state_publisher_gui" exec="joint_state_publisher_gui"/>
+    <node pkg="rviz2" exec="rviz2" />
+
+
+</launch>
